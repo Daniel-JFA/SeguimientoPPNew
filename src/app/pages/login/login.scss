@@ -3,53 +3,97 @@
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 120px);
-  background: radial-gradient(circle at 10% 20%, rgba(26, 32, 44, 0.95) 0%, rgba(45, 55, 72, 0.9) 90%);
+  background: radial-gradient(circle at 50% 50%, rgba(20, 24, 48, 0.5) 0%, var(--bg-app) 100%);
   padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  // Background blur blobs for high tech design
+  &::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+    top: 15%;
+    left: 20%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+    animation: blobFloat 8s infinite alternate ease-in-out;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
+    bottom: 15%;
+    right: 20%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+    animation: blobFloat 6s infinite alternate-reverse ease-in-out;
+  }
 
   .login-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 2.5rem;
+    background: rgba(13, 20, 38, 0.55);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
     width: 100%;
-    max-width: 440px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-    animation: fadeIn 0.6s ease-out;
+    max-width: 450px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+    animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover {
+      border-color: rgba(99, 102, 241, 0.2);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.7),
+        0 0 40px rgba(99, 102, 241, 0.05);
+    }
   }
 
   .login-card-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
 
     .icon-wrapper {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 1rem;
-      background: linear-gradient(135deg, #3182ce, #2b6cb0);
-      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1.25rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.35);
 
       span {
-        font-size: 28px;
+        font-size: 26px;
         color: #fff;
       }
     }
 
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: #fff;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      margin-bottom: 0.4rem;
     }
 
     p {
-      color: #a0aec0;
-      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.4;
     }
   }
 
@@ -59,16 +103,14 @@
       align-items: center;
       gap: 0.75rem;
       padding: 0.85rem 1rem;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 1.5rem;
-      font-size: 0.88rem;
-      border: 1px solid transparent;
-
-      &.alert-danger {
-        background: rgba(229, 62, 62, 0.15);
-        color: #feb2b2;
-        border-color: rgba(229, 62, 62, 0.25);
-      }
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--danger-border);
+      background: var(--danger-bg);
+      color: #fca5a5;
+      animation: alertSlideIn 0.3s ease;
 
       span {
         font-size: 20px;
@@ -77,13 +119,17 @@
 
     .form-group {
       margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
 
       label {
         display: block;
-        color: #cbd5e0;
-        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-size: 0.78rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
       .input-with-icon {
@@ -94,35 +140,36 @@
         span {
           position: absolute;
           left: 1rem;
-          color: #a0aec0;
-          font-size: 20px;
+          color: var(--text-muted);
+          font-size: 18px;
           pointer-events: none;
-          transition: color 0.2s;
+          transition: color 0.25s;
         }
 
         input {
           width: 100%;
-          padding: 0.85rem 1rem 0.85rem 2.75rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 8px;
+          padding: 0.85rem 1rem 0.85rem 2.6rem;
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
           color: #fff;
-          font-size: 0.95rem;
+          font-size: 0.92rem;
+          font-family: var(--font-main);
           transition: all 0.25s ease;
 
           &:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #3182ce;
-            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
 
             & + span {
-              color: #3182ce;
+              color: var(--primary-light);
             }
           }
 
           &::placeholder {
-            color: #718096;
+            color: var(--text-muted);
           }
         }
       }
@@ -131,52 +178,84 @@
     .btn-submit {
       width: 100%;
       padding: 0.9rem;
-      background: linear-gradient(135deg, #3182ce, #2b6cb0);
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(49, 130, 206, 0.25);
+      box-shadow: 0 8px 25px var(--primary-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
       &:hover:not(:disabled) {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(49, 130, 206, 0.35);
-        background: linear-gradient(135deg, #4299e1, #3182ce);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+        background: linear-gradient(135deg, var(--primary-light), var(--primary));
       }
 
       &:active:not(:disabled) {
-        transform: translateY(1px);
+        transform: translateY(0);
       }
 
       &:disabled {
-        opacity: 0.6;
+        opacity: 0.55;
         cursor: not-allowed;
       }
     }
 
     .login-footer {
       text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.78rem;
-      color: #718096;
+      margin-top: 1.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
 
       strong {
-        color: #cbd5e0;
+        color: var(--text-secondary);
       }
     }
   }
 }
 
-@keyframes fadeIn {
+@keyframes cardAppear {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes alertSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes blobFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(30px, -20px) scale(1.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 1rem;
+    .login-card {
+      padding: 2.25rem 1.5rem;
+    }
   }
 }
