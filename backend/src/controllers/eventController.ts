@@ -76,7 +76,7 @@ export const getEventDetails = async (req: AuthenticatedRequest, res: Response) 
     // Fetch session details
     const [sessionRows]: any = await pool.query(
       `SELECT id_sesion, id_evento, fecha_revcalidad, hora_revcalidad, 
-              anexosscore, observacioncalidad, observacionauditcalidad, horafineventdinam 
+              anexoscore, observacioncalidad, observacionauditcalidad, horafineventdinam 
        FROM sesiones 
        WHERE id_evento = ?`,
       [eventId]
@@ -90,7 +90,7 @@ export const getEventDetails = async (req: AuthenticatedRequest, res: Response) 
       sesion = {
         id_sesion: eventId + 1000,
         id_evento: eventId,
-        anexosscore: '',
+        anexoscore: '',
         observacioncalidad: '',
         horafineventdinam: evento.hora_fin_reunion_asistencia || ''
       };
@@ -119,7 +119,7 @@ export const getEventDetails = async (req: AuthenticatedRequest, res: Response) 
         id_sesion: eventId + 1000,
         id_evento: eventId,
         horafineventdinam: '12:00',
-        anexosscore: 'FO-GINF-093'
+        anexoscore: 'FO-GINF-093'
       }
     });
   }
@@ -168,18 +168,18 @@ export const uploadEvidence = async (req: AuthenticatedRequest, res: Response) =
 
   try {
     // 1. Fetch current session
-    const [rows]: any = await pool.query(`SELECT id_evento, anexosscore FROM sesiones WHERE id_sesion = ?`, [sesionId]);
+    const [rows]: any = await pool.query(`SELECT id_evento, anexoscore FROM sesiones WHERE id_sesion = ?`, [sesionId]);
     
     let currentAnexos = '';
     let eventId = sesionId - 1000; // fallback relation
     
     if (rows.length > 0) {
-      currentAnexos = rows[0].anexosscore || '';
+      currentAnexos = rows[0].anexoscore || '';
       eventId = rows[0].id_evento;
     } else {
       // Create session row if not exists
       await pool.query(
-        `INSERT INTO sesiones (id_sesion, id_evento, dinamizador, id_comuna, fechaactiv, anexosscore) 
+        `INSERT INTO sesiones (id_sesion, id_evento, dinamizador, id_comuna, fechaactiv, anexoscore) 
          VALUES (?, ?, ?, 10, CURDATE(), '')`,
         [sesionId, eventId, req.user?.id_usuario || 'admin']
       );
@@ -191,7 +191,7 @@ export const uploadEvidence = async (req: AuthenticatedRequest, res: Response) =
     const newAnexos = Array.from(anexosSet).join(',');
 
     // 3. Update database
-    await pool.query(`UPDATE sesiones SET anexosscore = ? WHERE id_sesion = ?`, [newAnexos, sesionId]);
+    await pool.query(`UPDATE sesiones SET anexoscore = ? WHERE id_sesion = ?`, [newAnexos, sesionId]);
     
     // Also change event color back to "En revisión" (#fdcae1) if it was rejected (#D97866)
     await pool.query(`UPDATE eventos SET color = '#fdcae1' WHERE id_evento = ? AND color = '#D97866'`, [eventId]);

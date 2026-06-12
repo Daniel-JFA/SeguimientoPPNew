@@ -11,10 +11,10 @@ export const runQualityGateCheck = async () => {
     
     // Buscar id_evento de las sesiones que no cumplen
     const [expiredSessions]: any = await pool.query(
-      `SELECT s.id_evento, s.id_sesion, s.anexosscore, e.color 
+      `SELECT s.id_evento, s.id_sesion, s.anexoscore, e.color 
        FROM sesiones as s
        JOIN eventos as e ON s.id_evento = e.id_evento
-       WHERE e.fechaevent <= ? AND (s.anexosscore IS NULL OR s.anexosscore = '' OR s.anexosscore NOT LIKE '%FO-GINF-093%')
+       WHERE e.fechaevent <= ? AND (s.anexoscore IS NULL OR s.anexoscore = '' OR s.anexoscore NOT LIKE '%FO-GINF-093%')
        AND e.color != '#D97866'`,
       [twoDaysAgo]
     );

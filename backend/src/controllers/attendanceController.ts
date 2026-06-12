@@ -130,7 +130,7 @@ export const saveExternalAttendance = async (req: Request, res: Response) => {
     if (sessionRows.length === 0) {
       // Create session
       const [insertSes]: any = await pool.query(
-        `INSERT INTO sesiones (id_evento, dinamizador, id_comuna, fechaactiv, anexosscore) 
+        `INSERT INTO sesiones (id_evento, dinamizador, id_comuna, fechaactiv, anexoscore) 
          VALUES (?, ?, ?, CURDATE(), '')`,
         [evento_id, 'admin', Number(comuna.split(' - ')[0]) || 10]
       );
