@@ -1,5 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface UserSession {
   token: string;
@@ -14,14 +16,20 @@ export interface UserSession {
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:3000/api/v1';
+
   // Estado reactivo utilizando Signals de Angular
   private currentUserSignal = signal<UserSession | null>(null);
 
   public currentUser = computed(() => this.currentUserSignal());
   public isAuthenticated = computed(() => !!this.currentUserSignal());
 
-  constructor(private router: Router) {
+  constructor(private http: HttpClient, private router: Router) {
     this.loadSession();
+  }
+
+  public authenticate(username: string, password: string): Observable<UserSession> {
+    return this.http.post<UserSession>(`${this.apiUrl}/auth/login`, { username, password });
   }
 
   private loadSession(): void {

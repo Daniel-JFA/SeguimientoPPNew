@@ -38,7 +38,7 @@ export interface Sesion {
 })
 export class EventService {
   // NOTA PARA EL DESARROLLADOR: Ajustar con el host real de la API
-  private apiUrl = 'https://dinamizadores.seguimientopp.co/api/v1';
+  private apiUrl = 'http://localhost:3000/api/v1';
 
   constructor(private http: HttpClient) {}
 

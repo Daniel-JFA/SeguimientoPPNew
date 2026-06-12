@@ -26,7 +26,7 @@ export interface AttendanceRecord {
   providedIn: 'root'
 })
 export class AttendanceService {
-  private apiUrl = 'https://dinamizadores.seguimientopp.co/api/v1';
+  private apiUrl = 'http://localhost:3000/api/v1';
 
   constructor(private http: HttpClient) {}
 
