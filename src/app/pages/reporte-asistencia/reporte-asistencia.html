@@ -1,0 +1,183 @@
+<div class="report-wrapper">
+  <!-- Controls (Hidden on Print) -->
+  <div class="no-print controls-bar">
+    <a [routerLink]="['/reportar-evento', eventId]" class="btn-control outline">
+      <span class="material-symbols-sharp">arrow_back</span>
+      Regresar al Reporte
+    </a>
+    <button (click)="printReport()" class="btn-control fill">
+      <span class="material-symbols-sharp">print</span>
+      Imprimir Reporte (PDF)
+    </button>
+  </div>
+
+  <!-- FO-GINF-093 Document Container -->
+  <div class="fo-document">
+    <!-- Document Header -->
+    <header class="fo-header">
+      <div class="header-logo-placeholder">
+        <span class="brand-title">ALCALDÍA DE MEDELLÍN</span>
+        <span class="brand-sub">Secretaría de Participación Ciudadana</span>
+      </div>
+      <div class="header-doc-title">
+        <h1>FORMATO DE CONTROL DE ASISTENCIA Y CARACTERIZACIÓN</h1>
+        <p>Estrategia Territorial de Presupuesto Participativo</p>
+      </div>
+      <div class="header-meta-info">
+        <div class="meta-row"><strong>Código:</strong> FO-GINF-093</div>
+        <div class="meta-row"><strong>Versión:</strong> 06</div>
+        <div class="meta-row"><strong>Página:</strong> 1 de 1</div>
+      </div>
+    </header>
+
+    <!-- Event Metadata Grid -->
+    <section class="fo-section-meta">
+      <div class="meta-grid">
+        <div class="meta-item span-12">
+          <strong>Nombre de la sesión / Evento:</strong> 
+          <span>{{ evento()?.tituloevent }}</span>
+        </div>
+        <div class="meta-item span-6">
+          <strong>Lugar:</strong> 
+          <span>{{ evento()?.lugarevent }}</span>
+        </div>
+        <div class="meta-item span-3">
+          <strong>Fecha:</strong> 
+          <span>{{ evento()?.fechaevent }}</span>
+        </div>
+        <div class="meta-item span-3">
+          <strong>Hora Inicio:</strong> 
+          <span>{{ evento()?.hora_inicioevent }}</span>
+        </div>
+        <div class="meta-item span-4">
+          <strong>Comuna / Corregimiento:</strong> 
+          <span>Comuna {{ evento()?.id_comuna }}</span>
+        </div>
+        <div class="meta-item span-8">
+          <strong>Mediador / Responsable:</strong> 
+          <span>{{ evento()?.identificacion }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demographics Aggregates Summary -->
+    <section class="fo-section-stats">
+      <h3>1. Consolidador Estadístico de Caracterización (Demográficos)</h3>
+      <div class="stats-grid">
+        <!-- Genero -->
+        <div class="stats-card">
+          <h4>Género</h4>
+          <table class="stats-mini-table">
+            <tr>
+              <td>Hombre:</td>
+              <td class="count">{{ stats().gender['Hombre'] }}</td>
+            </tr>
+            <tr>
+              <td>Mujer:</td>
+              <td class="count">{{ stats().gender['Mujer'] }}</td>
+            </tr>
+            <tr>
+              <td>LGBTI / Otro:</td>
+              <td class="count">{{ stats().gender['Otro'] }}</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total:</td>
+              <td class="count">{{ attendees().length }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Rangos de Edad -->
+        <div class="stats-card">
+          <h4>Rangos de Edad</h4>
+          <table class="stats-mini-table">
+            <tr>
+              <td>Jóvenes (14-28):</td>
+              <td class="count">{{ stats().age['14-28'] }}</td>
+            </tr>
+            <tr>
+              <td>Adultos (29-54):</td>
+              <td class="count">{{ stats().age['29-54'] }}</td>
+            </tr>
+            <tr>
+              <td>Adultos Mayores (55+):</td>
+              <td class="count">{{ stats().age['55+'] }}</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total:</td>
+              <td class="count">{{ attendees().length }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Enfoques Diferenciales -->
+        <div class="stats-card span-2">
+          <h4>Enfoques Diferenciales Consolidados</h4>
+          <div class="focus-stats-flex">
+            <div class="focus-stat-item" *ngFor="let f of stats().focus | keyvalue">
+              <span class="focus-name">{{ f.key }}:</span>
+              <span class="focus-count">{{ f.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Attendee List Table -->
+    <section class="fo-section-table">
+      <h3>2. Registro Detallado de Asistencia</h3>
+      <table class="fo-table">
+        <thead>
+          <tr>
+            <th style="width: 30px;">No.</th>
+            <th>Nombres y Apellidos</th>
+            <th style="width: 100px;">Documento</th>
+            <th style="width: 60px;">Género</th>
+            <th style="width: 60px;">Edad</th>
+            <th>Comuna</th>
+            <th>Correo / Teléfono</th>
+            <th style="width: 150px;">Firma Digitalizada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let att of attendees(); let i = index">
+            <td class="text-center">{{ i + 1 }}</td>
+            <td><strong>{{ att.nombres }}</strong></td>
+            <td>{{ att.documento }}</td>
+            <td>{{ att.genero }}</td>
+            <td>{{ att.edad }}</td>
+            <td>{{ att.comuna }}</td>
+            <td class="contact-cell">
+              <div>{{ att.correo }}</div>
+              <div class="phone" *ngIf="att.telefono">{{ att.telefono }}</div>
+            </td>
+            <td class="signature-cell text-center">
+              <!-- Si hay firma en base64 pintamos el canvas preview en la impresión -->
+              <img *ngIf="att.firma" [src]="att.firma" alt="Firma participante" class="signature-img" />
+              <span class="signature-text" *ngIf="!att.firma">Registrado digitalmente</span>
+            </td>
+          </tr>
+          <tr *ngIf="attendees().length === 0">
+            <td colspan="8" class="text-center empty-row">No hay participantes registrados para este encuentro.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Signatures Footer -->
+    <footer class="fo-signatures">
+      <div class="signature-box">
+        <div class="sig-line"></div>
+        <p><strong>Firma Responsable de la Sesión</strong></p>
+        <p>{{ evento()?.identificacion }}</p>
+        <p>Mediador Territorial</p>
+      </div>
+
+      <div class="signature-box">
+        <div class="sig-line"></div>
+        <p><strong>V°B° Supervisor / Calidad</strong></p>
+        <p>Unidad de Gestión Formativa</p>
+      </div>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,256 @@
+<div class="report-container" *ngIf="evento()">
+  <!-- Header / Navigation -->
+  <header class="report-header">
+    <a routerLink="/agenda" class="btn-back">
+      <span class="material-symbols-sharp">arrow_back</span>
+      Volver a la Agenda
+    </a>
+    <div class="header-titles">
+      <h2>Reportar Detalles de Sesión</h2>
+      <p class="subtitle">Evento ID: {{ eventId }} &bull; {{ evento()?.tituloevent }}</p>
+    </div>
+  </header>
+
+  <!-- Quality Control Feedback (Alerts) -->
+  <div class="quality-alert alert-rejected" *ngIf="evento()?.color === '#D97866'">
+    <div class="alert-icon">
+      <span class="material-symbols-sharp">warning</span>
+    </div>
+    <div class="alert-content">
+      <h3>Producto No Conforme - {{ evento()?.tiponoConforme || 'Sin ajuste de calidad' }}</h3>
+      <p class="quality-desc">
+        <strong>Observación del Auditor:</strong> 
+        {{ sesion()?.observacioncalidad || 'Faltan anexos correspondientes o el reporte no cumple las especificaciones.' }}
+      </p>
+      <p class="action-instructions">Por favor, cargue los documentos solicitados o corrija las evidencias a continuación para volver a someter esta sesión a revisión.</p>
+    </div>
+  </div>
+
+  <div class="quality-alert alert-pending" *ngIf="evento()?.color === '#fdcae1'">
+    <div class="alert-icon">
+      <span class="material-symbols-sharp">hourglass_empty</span>
+    </div>
+    <div class="alert-content">
+      <h3>Sesión En Revisión</h3>
+      <p>Los anexos y detalles han sido enviados. El equipo de calidad se encuentra revisando esta sesión.</p>
+    </div>
+  </div>
+
+  <!-- Form & Details Layout -->
+  <div class="report-layout">
+    <!-- Left Panel: Event Info & Actions -->
+    <aside class="info-sidebar">
+      <div class="card event-details-card">
+        <h3>Información General</h3>
+        <ul class="details-list">
+          <li>
+            <span class="label">Fecha:</span>
+            <span class="value">{{ evento()?.fechaevent }}</span>
+          </li>
+          <li>
+            <span class="label">Hora Inicio:</span>
+            <span class="value">{{ evento()?.hora_inicioevent }}</span>
+          </li>
+          <li>
+            <span class="label">Lugar:</span>
+            <span class="value">{{ evento()?.lugarevent }}</span>
+          </li>
+          <li>
+            <span class="label">Comuna / Corregimiento:</span>
+            <span class="value">Comuna {{ evento()?.id_comuna }}</span>
+          </li>
+          <li>
+            <span class="label">Organizador:</span>
+            <span class="value">{{ evento()?.departamento_organizador || 'N/A' }}</span>
+          </li>
+          <li>
+            <span class="label">Mediador Responsable:</span>
+            <span class="value">{{ evento()?.identificacion }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card action-card">
+        <h3>Enlaces de Gestión</h3>
+        <p class="action-help">Use estos enlaces para registrar participantes o generar el PDF oficial de asistencia.</p>
+        
+        <div class="action-buttons">
+          <a [routerLink]="['/registro-externo', eventId]" class="btn-action outline ripple">
+            <span class="material-symbols-sharp">signature</span>
+            Registro Externo de Firmas
+          </a>
+          <a [routerLink]="['/reporte-asistencia', eventId]" class="btn-action fill ripple">
+            <span class="material-symbols-sharp">picture_as_pdf</span>
+            Hoja FO-GINF-093 (PDF)
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Panel: Forms & Uploads -->
+    <main class="form-content">
+      <form (submit)="onSubmit()" class="card main-form-card">
+        <h3>Reporte de Actividades</h3>
+
+        <!-- Form fields -->
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="hora_fin">Hora de Finalización Efectiva</label>
+            <input 
+              type="time" 
+              id="hora_fin" 
+              [(ngModel)]="horafineventdinam" 
+              name="horafineventdinam"
+              required
+            />
+          </div>
+          
+          <div class="form-group col-6">
+            <label for="tipo_reunion">Tipo de Reunión</label>
+            <select 
+              id="tipo_reunion" 
+              [(ngModel)]="tipo_reunion_asistencia" 
+              name="tipo_reunion_asistencia"
+            >
+              <option value="">Seleccione...</option>
+              <option value="Taller de Pedagogía">Taller de Pedagogía</option>
+              <option value="Reunión Socialización">Reunión de Socialización</option>
+              <option value="Asamblea de Presupuesto">Asamblea de Presupuesto</option>
+              <option value="Mesa de Concertación">Mesa de Concertación</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Pedagogy / Moments -->
+        <div class="form-section">
+          <h4>Momentos Transversales Ejecutados</h4>
+          <p class="section-help">Seleccione los momentos pedagógicos llevados a cabo en este encuentro social.</p>
+          <div class="moments-grid">
+            <label class="moment-checkbox">
+              <input type="checkbox" [(ngModel)]="momentos.momento1" name="mom1" />
+              <div class="checkbox-ui"></div>
+              <div class="moment-label">
+                <strong>Momento 1: Acogida y Encuadre</strong>
+                <span>Presentación de objetivos, reglas de juego y sensibilización inicial.</span>
+              </div>
+            </label>
+
+            <label class="moment-checkbox">
+              <input type="checkbox" [(ngModel)]="momentos.momento2" name="mom2" />
+              <div class="checkbox-ui"></div>
+              <div class="moment-label">
+                <strong>Momento 2: Pedagogía del PP</strong>
+                <span>Explicación didáctica sobre asignación y viabilidad de proyectos.</span>
+              </div>
+            </label>
+
+            <label class="moment-checkbox">
+              <input type="checkbox" [(ngModel)]="momentos.momento3" name="mom3" />
+              <div class="checkbox-ui"></div>
+              <div class="moment-label">
+                <strong>Momento 3: Cierre y Acuerdos</strong>
+                <span>Consolidación de prioridades, actas y compromisos de seguimiento.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Observations -->
+        <div class="form-group">
+          <label for="observaciones">Observaciones / Resumen de la Jornada</label>
+          <textarea 
+            id="observaciones" 
+            rows="4" 
+            [(ngModel)]="observaciones" 
+            name="observaciones"
+            placeholder="Describa el desarrollo de la reunión, aportes de la comunidad y novedades..."
+          ></textarea>
+        </div>
+
+        <!-- Upload attachments section -->
+        <div class="form-section attachments-section">
+          <h4>Evidencias y Documentos Soporte</h4>
+          <p class="section-help">Suba los soportes necesarios. El sistema los auditará automáticamente para cumplir las metas de calidad.</p>
+
+          <div class="upload-grid">
+            <!-- FO-GINF-093 -->
+            <div class="upload-box" [class.completed]="uploadStatuses()['FO-GINF-093'].success">
+              <div class="box-icon">
+                <span class="material-symbols-sharp">description</span>
+              </div>
+              <div class="box-details">
+                <h5>Formato de Asistencia (FO-GINF-093)</h5>
+                <p>Lista consolidada con firmas de los participantes.</p>
+                
+                <div class="upload-controls">
+                  <label class="btn-upload ripple">
+                    <input type="file" (change)="onFileChange($event, 'FO-GINF-093')" accept=".pdf,.png,.jpg,.jpeg" />
+                    {{ uploadStatuses()['FO-GINF-093'].success ? 'Reemplazar' : 'Subir Archivo' }}
+                  </label>
+                  <span class="status-msg" *ngIf="uploadStatuses()['FO-GINF-093'].loading">Subiendo...</span>
+                  <span class="status-msg success" *ngIf="uploadStatuses()['FO-GINF-093'].success">
+                    <span class="material-symbols-sharp">check_circle</span> Cargado
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fotos -->
+            <div class="upload-box" [class.completed]="uploadStatuses()['Fotos'].success">
+              <div class="box-icon">
+                <span class="material-symbols-sharp">photo_camera</span>
+              </div>
+              <div class="box-details">
+                <h5>Registro Fotográfico</h5>
+                <p>Mínimo 2 fotografías que evidencien la ejecución y asistencia.</p>
+                
+                <div class="upload-controls">
+                  <label class="btn-upload ripple">
+                    <input type="file" (change)="onFileChange($event, 'Fotos')" accept="image/*" />
+                    {{ uploadStatuses()['Fotos'].success ? 'Reemplazar' : 'Subir Imagen' }}
+                  </label>
+                  <span class="status-msg" *ngIf="uploadStatuses()['Fotos'].loading">Subiendo...</span>
+                  <span class="status-msg success" *ngIf="uploadStatuses()['Fotos'].success">
+                    <span class="material-symbols-sharp">check_circle</span> Cargado
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Acta -->
+            <div class="upload-box" [class.completed]="uploadStatuses()['Acta'].success">
+              <div class="box-icon">
+                <span class="material-symbols-sharp">rate_review</span>
+              </div>
+              <div class="box-details">
+                <h5>Acta del Encuentro</h5>
+                <p>Copia digitalizada del acta oficial con acuerdos de priorización.</p>
+                
+                <div class="upload-controls">
+                  <label class="btn-upload ripple">
+                    <input type="file" (change)="onFileChange($event, 'Acta')" accept=".pdf,.doc,.docx" />
+                    {{ uploadStatuses()['Acta'].success ? 'Reemplazar' : 'Subir Acta' }}
+                  </label>
+                  <span class="status-msg" *ngIf="uploadStatuses()['Acta'].loading">Subiendo...</span>
+                  <span class="status-msg success" *ngIf="uploadStatuses()['Acta'].success">
+                    <span class="material-symbols-sharp">check_circle</span> Cargado
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-save ripple" [disabled]="saving()">
+            <span class="material-symbols-sharp" *ngIf="!saving()">save</span>
+            {{ saving() ? 'Guardando...' : 'Guardar Reporte' }}
+          </button>
+          <span class="save-status-msg" *ngIf="saveSuccess()">
+            <span class="material-symbols-sharp">check_circle</span> Reporte guardado con éxito
+          </span>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,142 @@
+<div class="agenda-container">
+  <!-- Sidebar of Events / Quick list -->
+  <aside class="events-sidebar">
+    <div class="sidebar-header">
+      <h3>Lista de Eventos</h3>
+      <span class="badge">{{ filteredEvents().length }} Sesiones</span>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="search-box">
+      <span class="material-symbols-sharp">search</span>
+      <input 
+        type="text" 
+        placeholder="Buscar por título, lugar, mediador..." 
+        [ngModel]="searchQuery()" 
+        (ngModelChange)="searchQuery.set($event)"
+      />
+    </div>
+
+    <div class="filter-pills">
+      <button 
+        [class.active]="selectedFilter() === 'all'" 
+        (click)="selectedFilter.set('all')"
+        class="pill-btn"
+      >
+        Todos
+      </button>
+      <button 
+        [class.active]="selectedFilter() === 'pending'" 
+        (click)="selectedFilter.set('pending')"
+        class="pill-btn pending"
+      >
+        En revisión
+      </button>
+      <button 
+        [class.active]="selectedFilter() === 'rejected'" 
+        (click)="selectedFilter.set('rejected')"
+        class="pill-btn rejected"
+      >
+        No Conforme
+      </button>
+    </div>
+
+    <!-- Event List -->
+    <div class="events-list">
+      <div 
+        *ngFor="let event of filteredEvents()" 
+        class="event-list-item" 
+        [style.border-left-color]="event.color || '#3182ce'"
+        (click)="onEventClick(event)"
+      >
+        <div class="event-meta">
+          <span class="time">{{ event.hora_inicioevent }}</span>
+          <span class="comuna">Comuna {{ event.id_comuna }}</span>
+        </div>
+        <h4 class="event-title">{{ event.tituloevent }}</h4>
+        <div class="event-footer">
+          <span class="location">
+            <span class="material-symbols-sharp">location_on</span>
+            {{ event.lugarevent }}
+          </span>
+          <span class="coordinator" *ngIf="event.identificacion">
+            <span class="material-symbols-sharp">person</span>
+            {{ event.identificacion }}
+          </span>
+        </div>
+        
+        <!-- Alerta de no conformidad si aplica -->
+        <div class="no-conform-tag" *ngIf="event.color === '#D97866'">
+          <span class="material-symbols-sharp">warning</span>
+          {{ event.tiponoConforme || 'Revisar observaciones' }}
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredEvents().length === 0">
+        <span class="material-symbols-sharp">calendar_today</span>
+        <p>No se encontraron eventos para los filtros seleccionados.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Calendar View -->
+  <main class="calendar-wrapper">
+    <header class="calendar-header">
+      <div class="month-nav">
+        <h2>{{ monthNames[selectedDate().getMonth()] }} {{ selectedDate().getFullYear() }}</h2>
+        <div class="nav-arrows">
+          <button (click)="prevMonth()" class="nav-btn ripple">
+            <span class="material-symbols-sharp">chevron_left</span>
+          </button>
+          <button (click)="nextMonth()" class="nav-btn ripple">
+            <span class="material-symbols-sharp">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="calendar-legend">
+        <div class="legend-item"><span class="dot normal"></span> Aprobado / Sin Revisar</div>
+        <div class="legend-item"><span class="dot pending"></span> En Revisión</div>
+        <div class="legend-item"><span class="dot rejected"></span> Producto No Conforme</div>
+      </div>
+    </header>
+
+    <div class="calendar-grid">
+      <!-- Weekday headers -->
+      <div class="weekday-header">Lunes</div>
+      <div class="weekday-header">Martes</div>
+      <div class="weekday-header">Miércoles</div>
+      <div class="weekday-header">Jueves</div>
+      <div class="weekday-header">Viernes</div>
+      <div class="weekday-header">Sábado</div>
+      <div class="weekday-header">Domingo</div>
+
+      <!-- Calendar days -->
+      <ng-container *ngFor="let week of calendarWeeks()">
+        <div 
+          *ngFor="let day of week" 
+          class="calendar-day" 
+          [class.today]="isToday(day)"
+          [class.outside-month]="!isCurrentMonth(day)"
+          (click)="selectDay(day)"
+        >
+          <span class="day-number">{{ day.getDate() }}</span>
+          
+          <div class="day-events">
+            <div 
+              *ngFor="let ev of getEventsForDate(day)" 
+              class="day-event-pill" 
+              [style.background-color]="ev.color || '#3182ce'"
+              [class.light-text]="ev.color === '#D97866'"
+              (click)="onEventClick(ev); $event.stopPropagation()"
+              [title]="ev.tituloevent"
+            >
+              <span class="event-time">{{ ev.hora_inicioevent }}</span>
+              <span class="event-name">{{ ev.tituloevent }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,205 @@
+<div class="signup-container">
+  <!-- Brand / Header -->
+  <header class="signup-header">
+    <div class="logo-wrapper">
+      <span class="material-symbols-sharp">signature</span>
+    </div>
+    <h2>SSE - Control de Asistencia</h2>
+    <p class="subtitle">Estrategia Territorial de Presupuesto Participativo</p>
+    
+    <div class="event-info-box" *ngIf="evento()">
+      <p><strong>Sesión:</strong> {{ evento()?.tituloevent }}</p>
+      <p><strong>Lugar:</strong> {{ evento()?.lugarevent }} &bull; <strong>Fecha:</strong> {{ evento()?.fechaevent }}</p>
+    </div>
+  </header>
+
+  <!-- Alerts -->
+  <div class="alert alert-success" *ngIf="successMsg()">
+    <span class="material-symbols-sharp">check_circle</span>
+    <div class="alert-content">
+      <p>{{ successMsg() }}</p>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMsg()">
+    <span class="material-symbols-sharp">error</span>
+    <div class="alert-content">
+      <p>{{ errorMsg() }}</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form (submit)="onSubmit()" class="signup-card-form" *ngIf="!successMsg()">
+    <h3>Datos del Participante</h3>
+    <p class="form-instructions">Los campos marcados con asterisco (*) son obligatorios para el reporte oficial FO-GINF-093.</p>
+
+    <div class="form-grid">
+      <!-- Documento -->
+      <div class="form-group col-6">
+        <label for="documento">Documento de Identidad *</label>
+        <div class="input-spinner-wrapper">
+          <input 
+            type="text" 
+            id="documento" 
+            [(ngModel)]="record.documento" 
+            name="documento"
+            required
+            placeholder="Ingrese número de documento"
+            (blur)="onDocumentBlur()"
+          />
+          <span class="spinner" *ngIf="searchingParticipant()"></span>
+        </div>
+        <span class="help-text">Al salir del campo buscaremos si ya se ha registrado para autocompletar sus datos.</span>
+      </div>
+
+      <!-- Nombres -->
+      <div class="form-group col-6">
+        <label for="nombres">Nombres y Apellidos Completos *</label>
+        <input 
+          type="text" 
+          id="nombres" 
+          [(ngModel)]="record.nombres" 
+          name="nombres"
+          required
+          placeholder="Ingrese su nombre completo"
+        />
+      </div>
+
+      <!-- Genero -->
+      <div class="form-group col-4">
+        <label for="genero">Género *</label>
+        <select id="genero" [(ngModel)]="record.genero" name="genero" required>
+          <option value="">Seleccione...</option>
+          <option value="Hombre">Hombre</option>
+          <option value="Mujer">Mujer</option>
+          <option value="LGBTI">Intersexual / Trans / Otro</option>
+        </select>
+      </div>
+
+      <!-- Edad -->
+      <div class="form-group col-4">
+        <label for="edad">Rango de Edad *</label>
+        <select id="edad" [(ngModel)]="record.edad" name="edad" required>
+          <option value="">Seleccione...</option>
+          <option value="14-28">14 a 28 años (Jóvenes)</option>
+          <option value="29-54">29 a 54 años (Adultos)</option>
+          <option value="55+">55 años o más (Adultos mayores)</option>
+        </select>
+      </div>
+
+      <!-- Comuna -->
+      <div class="form-group col-4">
+        <label for="comuna">Comuna / Corregimiento Residencia *</label>
+        <select id="comuna" [(ngModel)]="record.comuna" name="comuna" required>
+          <option value="">Seleccione...</option>
+          <option *ngFor="let com of comunasList" [value]="com">{{ com }}</option>
+        </select>
+      </div>
+
+      <!-- Correo -->
+      <div class="form-group col-6">
+        <label for="correo">Correo Electrónico *</label>
+        <input 
+          type="email" 
+          id="correo" 
+          [(ngModel)]="record.correo" 
+          name="correo"
+          required
+          placeholder="ejemplo@correo.com"
+        />
+      </div>
+
+      <!-- Telefono -->
+      <div class="form-group col-6">
+        <label for="telefono">Teléfono / Celular</label>
+        <input 
+          type="text" 
+          id="telefono" 
+          [(ngModel)]="record.telefono" 
+          name="telefono"
+          placeholder="Número de contacto"
+        />
+      </div>
+
+      <!-- Organizacion -->
+      <div class="form-group col-6">
+        <label for="organizacion">Organización Social / Comunitaria</label>
+        <input 
+          type="text" 
+          id="organizacion" 
+          [(ngModel)]="record.organizacion" 
+          name="organizacion"
+          placeholder="JAC, Organización, Red, Colectivo..."
+        />
+      </div>
+
+      <!-- Empresa y Cargo (para funcionarios u organizaciones invitadas) -->
+      <div class="form-group col-3">
+        <label for="empresa">Empresa / Entidad</label>
+        <input 
+          type="text" 
+          id="empresa" 
+          [(ngModel)]="record.empresa" 
+          name="empresa"
+          placeholder="Si aplica"
+        />
+      </div>
+
+      <div class="form-group col-3">
+        <label for="cargo">Cargo</label>
+        <input 
+          type="text" 
+          id="cargo" 
+          [(ngModel)]="record.cargo" 
+          name="cargo"
+          placeholder="Si aplica"
+        />
+      </div>
+    </div>
+
+    <!-- Enfoques Diferenciales -->
+    <div class="form-section">
+      <h4>Enfoque Diferencial / Poblacional (Seleccione los aplicables)</h4>
+      <p class="section-help">Esta información es confidencial y sirve únicamente para caracterización estadística de participación distrital.</p>
+      
+      <div class="enfoques-grid">
+        <div *ngFor="let item of enfoquesList" class="enfoque-checkbox-wrapper">
+          <label class="enfoque-checkbox">
+            <input 
+              type="checkbox" 
+              [checked]="isEnfoqueChecked(item)"
+              (change)="onEnfoqueChange(item, $event)"
+            />
+            <div class="checkbox-ui"></div>
+            <span>{{ item }}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas Signature -->
+    <div class="form-section signature-section">
+      <h4>Firma Digital del Participante *</h4>
+      <p class="section-help">Dibuje su firma con el dedo (pantallas táctiles) o con el ratón del computador en el recuadro gris.</p>
+
+      <div class="canvas-container">
+        <canvas #sigCanvas width="560" height="180"></canvas>
+      </div>
+
+      <div class="canvas-actions">
+        <button type="button" class="btn-clear" (click)="clearSignature()">
+          <span class="material-symbols-sharp">delete</span>
+          Limpiar Firma
+        </button>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-submit-wrapper">
+      <button type="submit" class="btn-submit ripple" [disabled]="saving()">
+        <span class="material-symbols-sharp">how_to_reg</span>
+        {{ saving() ? 'Guardando Registro...' : 'Registrar Asistencia' }}
+      </button>
+    </div>
+  </form>
+</div>

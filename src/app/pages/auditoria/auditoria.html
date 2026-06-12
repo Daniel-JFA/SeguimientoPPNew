@@ -1,0 +1,199 @@
+<div class="audit-container">
+  <!-- Left Sidebar: Pending Sessions -->
+  <aside class="audit-sidebar">
+    <div class="sidebar-header">
+      <h3>Bandeja de Calidad</h3>
+      <span class="badge">{{ pendingSessions().length }} Pendientes</span>
+    </div>
+
+    <div class="sessions-list">
+      <div 
+        *ngFor="let ev of pendingSessions()" 
+        class="session-item"
+        [class.active]="ev.id_evento === eventId"
+        [style.border-left-color]="ev.color || '#fdcae1'"
+        (click)="selectEvent(ev)"
+      >
+        <div class="item-meta">
+          <span class="date">{{ ev.fechaevent }}</span>
+          <span class="comuna">C{{ ev.id_comuna }}</span>
+        </div>
+        <h4 class="item-title">{{ ev.tituloevent }}</h4>
+        <div class="item-footer">
+          <span class="coord">{{ ev.identificacion }}</span>
+          <span class="status-dot" [style.background-color]="ev.color || '#fdcae1'"></span>
+        </div>
+      </div>
+
+      <div class="empty-sidebar" *ngIf="pendingSessions().length === 0">
+        <span class="material-symbols-sharp">verified_user</span>
+        <p>No hay sesiones con anomalías pendientes de revisión.</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Area: Audit Desk -->
+  <main class="audit-desk">
+    <!-- Empty State -->
+    <div class="empty-desk" *ngIf="!evento()">
+      <span class="material-symbols-sharp">fact_check</span>
+      <h2>Módulo de Aseguramiento de Calidad (Nivel 1)</h2>
+      <p>Seleccione un evento del listado de la izquierda para calificar sus evidencias y observaciones.</p>
+    </div>
+
+    <!-- Active Audit Workspace -->
+    <div class="workspace-wrapper" *ngIf="evento()">
+      <header class="workspace-header">
+        <h2>Auditar Sesión #{{ eventId }}</h2>
+        <span class="status-badge" [style.background-color]="evento()?.color || '#3182ce'">
+          {{ evento()?.color === '#D97866' ? 'Producto No Conforme' : (evento()?.color === '#fdcae1' ? 'En Revisión' : 'Aprobado') }}
+        </span>
+      </header>
+
+      <!-- Event info and uploaded documents -->
+      <section class="card summary-card">
+        <h3>Evidencias Recibidas</h3>
+        <div class="summary-grid">
+          <div class="info-block">
+            <p><strong>Sesión:</strong> {{ evento()?.tituloevent }}</p>
+            <p><strong>Mediador:</strong> {{ evento()?.identificacion }}</p>
+            <p><strong>Lugar:</strong> {{ evento()?.lugarevent }} &bull; <strong>Fecha:</strong> {{ evento()?.fechaevent }}</p>
+          </div>
+          
+          <div class="doc-actions-block">
+            <a [routerLink]="['/reporte-asistencia', eventId]" class="btn-doc-link ripple">
+              <span class="material-symbols-sharp">analytics</span>
+              Ver Caracterización y Asistencias
+            </a>
+          </div>
+        </div>
+
+        <div class="evidence-check-list">
+          <h4>Soportes Adjuntos</h4>
+          
+          <div class="evidence-row">
+            <div class="doc-icon">
+              <span class="material-symbols-sharp">description</span>
+            </div>
+            <div class="doc-meta">
+              <h5>Formato FO-GINF-093</h5>
+              <p *ngIf="sesion()?.anexosscore?.includes('FO-GINF-093')">Archivo cargado y validado en sistema.</p>
+              <p *ngIf="!sesion()?.anexosscore?.includes('FO-GINF-093')" class="missing">Falta cargar este archivo.</p>
+            </div>
+            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('FO-GINF-093')">
+              <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Descargar</a>
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="doc-icon">
+              <span class="material-symbols-sharp">photo_camera</span>
+            </div>
+            <div class="doc-meta">
+              <h5>Evidencia Fotográfica</h5>
+              <p *ngIf="sesion()?.anexosscore?.includes('Fotos')">Registro fotográfico recibido.</p>
+              <p *ngIf="!sesion()?.anexosscore?.includes('Fotos')" class="missing">Falta cargar este archivo.</p>
+            </div>
+            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('Fotos')">
+              <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Ver Foto</a>
+            </div>
+          </div>
+
+          <div class="evidence-row">
+            <div class="doc-icon">
+              <span class="material-symbols-sharp">rate_review</span>
+            </div>
+            <div class="doc-meta">
+              <h5>Acta Escaneada</h5>
+              <p *ngIf="sesion()?.anexosscore?.includes('Acta')">Acta de priorización recibida.</p>
+              <p *ngIf="!sesion()?.anexosscore?.includes('Acta')" class="missing">Falta cargar este archivo.</p>
+            </div>
+            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('Acta')">
+              <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Descargar</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Auditor decision form -->
+      <section class="card audit-form-card">
+        <h3>Concepto del Auditor</h3>
+        
+        <form (submit)="onSubmit()">
+          <!-- Decision status -->
+          <div class="form-group">
+            <label>Decisión de Calidad *</label>
+            <div class="status-selector-buttons">
+              <button 
+                type="button" 
+                class="status-btn approve" 
+                [class.selected]="colorStatus === '' || colorStatus === '#3182ce'"
+                (click)="colorStatus = ''"
+              >
+                <span class="material-symbols-sharp">check_circle</span>
+                Aprobado (Conforme)
+              </button>
+
+              <button 
+                type="button" 
+                class="status-btn review" 
+                [class.selected]="colorStatus === '#fdcae1'"
+                (click)="colorStatus = '#fdcae1'"
+              >
+                <span class="material-symbols-sharp">hourglass_empty</span>
+                En Revisión
+              </button>
+
+              <button 
+                type="button" 
+                class="status-btn reject" 
+                [class.selected]="colorStatus === '#D97866'"
+                (click)="colorStatus = '#D97866'"
+              >
+                <span class="material-symbols-sharp">warning</span>
+                No Conforme (Rechazado)
+              </button>
+            </div>
+          </div>
+
+          <!-- Reject type (visible only when rejected) -->
+          <div class="form-group slide-fade" *ngIf="colorStatus === '#D97866'">
+            <label for="no_conforme_type">Tipo de No Conformidad</label>
+            <select id="no_conforme_type" [(ngModel)]="tiponoConforme" name="tiponoConforme" required>
+              <option value="">Seleccione motivo...</option>
+              <option value="Sin evidencias">Sin evidencias (Falta FO-GINF-093 / Fotos)</option>
+              <option value="Sin ajuste de calidad">Sin ajuste de calidad (Firma no coincide)</option>
+              <option value="Acta ilegible">Acta ilegible / Incompleta</option>
+              <option value="Corrección de firmas">Requiere corrección de firmas en planilla</option>
+            </select>
+          </div>
+
+          <!-- Auditor Observations -->
+          <div class="form-group">
+            <label for="obs">Observaciones y Hallazgos *</label>
+            <textarea 
+              id="obs" 
+              rows="4" 
+              [(ngModel)]="observacioncalidad" 
+              name="observacioncalidad"
+              required
+              placeholder="Describa el estado de los documentos, firmas validadas, y si aplica, los detalles de por qué se rechaza el reporte para que el mediador realice las correcciones..."
+            ></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit ripple" [disabled]="saving()">
+              <span class="material-symbols-sharp">task_alt</span>
+              {{ saving() ? 'Guardando...' : 'Aplicar Concepto' }}
+            </button>
+            
+            <span class="success-alert" *ngIf="saveSuccess()">
+              <span class="material-symbols-sharp">check_circle</span>
+              Concepto de auditoría aplicado con éxito.
+            </span>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+</div>

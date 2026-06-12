@@ -1,0 +1,37 @@
+<header class="app-header">
+  <div class="header-container">
+    <div class="header-logo">
+      <div class="logo-circle">
+        <span class="material-symbols-sharp">account_balance</span>
+      </div>
+      <div class="logo-text">
+        <span class="brand">SSE</span>
+        <span class="tagline">Seguimiento Estrategia</span>
+      </div>
+    </div>
+
+    <!-- Navegación condicional basada en login -->
+    <nav class="header-nav" *ngIf="authService.isAuthenticated()">
+      <a routerLink="/agenda" routerLinkActive="active" class="nav-link">
+        <span class="material-symbols-sharp">calendar_month</span>
+        <span>Agenda</span>
+      </a>
+      
+      <!-- Sólo para administradores/calidad (rol level = 1) -->
+      <a routerLink="/auditoria" routerLinkActive="active" class="nav-link" *ngIf="authService.hasRole(1)">
+        <span class="material-symbols-sharp">verified_user</span>
+        <span>Auditoría Calidad</span>
+      </a>
+    </nav>
+
+    <div class="header-user-info" *ngIf="authService.isAuthenticated()">
+      <div class="user-badge">
+        <span class="user-name">{{ authService.currentUser()?.usuario }}</span>
+        <span class="user-role">{{ authService.currentUser()?.rol }}</span>
+      </div>
+      <button (click)="onLogout()" class="btn-logout" title="Cerrar Sesión">
+        <span class="material-symbols-sharp">logout</span>
+      </button>
+    </div>
+  </div>
+</header>

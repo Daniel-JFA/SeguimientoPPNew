@@ -1,0 +1,58 @@
+<main class="login-page">
+  <section class="login-card">
+    <div class="login-card-header">
+      <div class="icon-wrapper">
+        <span className="material-symbols-sharp">lock</span>
+      </div>
+      <h2>Unidad de Gestión Formativa</h2>
+      <p>SSE - Sistema de Seguimiento a la Estrategia Territorial</p>
+    </div>
+
+    <form (submit)="onSubmit()" class="login-form">
+      <div *ngIf="errorMsg()" class="alert alert-danger">
+        <span class="material-symbols-sharp">error</span>
+        <span>{{ errorMsg() }}</span>
+      </div>
+
+      <div class="form-group">
+        <label for="username">Usuario o Identificación</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-sharp">person</span>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="username"
+            required
+            placeholder="Ingrese su usuario"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="input-with-icon">
+          <span class="material-symbols-sharp">key</span>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            placeholder="Ingrese su contraseña"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loading()" class="btn-submit ripple">
+        {{ loading() ? 'Ingresando...' : 'Iniciar Sesión' }}
+      </button>
+
+      <div class="login-footer">
+        <p>Soporte Técnico: <strong>seguimientopdlypp&#64;gmail.com</strong></p>
+      </div>
+    </form>
+  </section>
+</main>
