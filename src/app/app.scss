@@ -252,6 +252,160 @@ body {
   }
 }
 
+// Light theme overrides
+body.light-theme {
+  --bg-app: #f1f5f9;
+  --bg-card: rgba(255, 255, 255, 0.65);
+  --bg-card-solid: #ffffff;
+  --bg-card-hover: rgba(255, 255, 255, 0.85);
+  --border-color: rgba(15, 23, 42, 0.08);
+  --border-hover: rgba(99, 102, 241, 0.35);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --primary: #4f46e5;
+  --primary-hover: #3730a3;
+  --primary-glow: rgba(79, 70, 229, 0.1);
+  --primary-light: #6366f1;
+  
+  --accent: #0891b2;
+  --accent-light: #06b6d4;
+  --accent-glow: rgba(8, 145, 178, 0.1);
+
+  --success: #059669;
+  --success-bg: rgba(5, 150, 105, 0.06);
+  --success-border: rgba(5, 150, 105, 0.15);
+
+  --pending: #d97706;
+  --pending-bg: rgba(217, 119, 6, 0.06);
+  --pending-border: rgba(217, 119, 6, 0.15);
+
+  --danger: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.06);
+  --danger-border: rgba(220, 38, 38, 0.15);
+
+  --shadow-premium: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.02) 0%, transparent 40%);
+
+  // Global elements override for light theme
+  h1, h2, h3, h4, h5, h6,
+  .brand,
+  .login-card h2,
+  .login-form input,
+  .event-title,
+  .item-title,
+  .sidebar-header h3,
+  .workspace-header h2,
+  .summary-card h3,
+  .summary-card h4,
+  .summary-card h5,
+  .audit-form-card h3,
+  .form-section h4,
+  .action-card h3,
+  .signup-header h2,
+  .signup-card-form h3,
+  .report-header h2,
+  .main-form-card h3 {
+    color: var(--text-primary) !important;
+  }
+
+  // Inputs overrides
+  input, select, textarea,
+  .login-form input {
+    background: rgba(15, 23, 42, 0.02) !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+    color: var(--text-primary) !important;
+
+    &:focus {
+      background: #ffffff !important;
+      border-color: var(--primary) !important;
+    }
+
+    &::placeholder {
+      color: #94a3b8 !important;
+    }
+  }
+
+  // Cards overrides
+  .premium-card,
+  .login-card,
+  .events-sidebar,
+  .calendar-grid,
+  .card,
+  .audit-sidebar,
+  .session-item,
+  .signup-card-form {
+    background: rgba(255, 255, 255, 0.65) !important;
+    box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  // Hover states
+  .session-item:hover,
+  .event-list-item:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  // Active items
+  .session-item.active {
+    background: rgba(99, 102, 241, 0.06) !important;
+  }
+
+  // Calendar specific overrides
+  .calendar-day.outside-month {
+    background: rgba(15, 23, 42, 0.03) !important;
+    
+    .day-number {
+      color: #cbd5e1 !important;
+    }
+  }
+
+  .calendar-day:hover {
+    background: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  // Theme toggle button override for light theme (dark mode button is dark, light mode button is light)
+  .btn-theme-toggle {
+    background: rgba(15, 23, 42, 0.04) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    color: var(--text-secondary) !important;
+
+    &:hover {
+      background: rgba(15, 23, 42, 0.08) !important;
+      color: var(--text-primary) !important;
+    }
+  }
+
+  // Material symbols icon overrides in input fields
+  .input-wrapper span.icon,
+  .input-with-icon span,
+  .search-box span {
+    color: #94a3b8 !important;
+  }
+
+  // Brand gradient in light mode
+  .brand {
+    background: linear-gradient(120deg, var(--primary), var(--text-secondary)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  // Legend and tags
+  .legend-item,
+  .badge {
+    color: var(--text-secondary) !important;
+  }
+
+  .sidebar-header .badge {
+    background: rgba(15, 23, 42, 0.04) !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+    color: var(--text-secondary) !important;
+  }
+}
+
 // Print global configurations
 @media print {
   body {

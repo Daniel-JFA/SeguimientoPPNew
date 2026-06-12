@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService } from '../../services/theme.service';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -11,7 +12,10 @@ import { NgIf } from '@angular/common';
   styleUrl: './header.scss'
 })
 export class HeaderComponent {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    public themeService: ThemeService
+  ) {}
 
   onLogout(): void {
     this.authService.logout();

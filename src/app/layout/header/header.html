@@ -24,14 +24,20 @@
       </a>
     </nav>
 
-    <div class="header-user-info" *ngIf="authService.isAuthenticated()">
-      <div class="user-badge">
-        <span class="user-name">{{ authService.currentUser()?.usuario }}</span>
-        <span class="user-role">{{ authService.currentUser()?.rol }}</span>
-      </div>
-      <button (click)="onLogout()" class="btn-logout" title="Cerrar Sesión">
-        <span class="material-symbols-sharp">logout</span>
+    <div class="header-right">
+      <button type="button" (click)="themeService.toggleTheme()" class="btn-theme-toggle" [title]="themeService.isLight() ? 'Activar Modo Oscuro' : 'Activar Modo Claro'">
+        <span class="material-symbols-sharp">{{ themeService.isLight() ? 'dark_mode' : 'light_mode' }}</span>
       </button>
+
+      <div class="header-user-info" *ngIf="authService.isAuthenticated()">
+        <div class="user-badge">
+          <span class="user-name">{{ authService.currentUser()?.usuario }}</span>
+          <span class="user-role">{{ authService.currentUser()?.rol }}</span>
+        </div>
+        <button (click)="onLogout()" class="btn-logout" title="Cerrar Sesión">
+          <span class="material-symbols-sharp">logout</span>
+        </button>
+      </div>
     </div>
   </div>
 </header>

@@ -104,6 +104,36 @@
     }
   }
 
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+
+    .btn-theme-toggle {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.55rem;
+      border-radius: 8px;
+      transition: all 0.25s ease;
+
+      span {
+        font-size: 18px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        border-color: var(--border-hover);
+        transform: scale(1.05);
+      }
+    }
+  }
+
   .header-user-info {
     display: flex;
     align-items: center;
