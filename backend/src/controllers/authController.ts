@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
     const simpleSha1 = crypto.createHash('sha1').update(password).digest('hex');
 
     const [rows]: any = await pool.query(
-      `SELECT u.id_usuario, u.user, p.nombres, p.apellidos, p.correo, r.rol, r.id_rol 
+      `SELECT u.id_user, u.user, p.nombres, p.apellidos, p.correo, r.rol, r.id_rol 
        FROM usuario as u 
        JOIN persona as p ON u.id_persona = p.identificacion
        JOIN rol as r ON u.id_rol = r.id_rol
@@ -85,7 +85,7 @@ export const login = async (req: Request, res: Response) => {
     const level = isQualityUser ? 1 : 2;
 
     const token = jwt.sign(
-      { id_usuario: dbUser.id_usuario, user: dbUser.user, rol: dbUser.rol, level },
+      { id_usuario: dbUser.id_user, user: dbUser.user, rol: dbUser.rol, level },
       JWT_SECRET,
       { expiresIn: '8h' }
     );
@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response) => {
     res.json({
       token,
       usuario: fullName,
-      id_usuario: dbUser.id_usuario,
+      id_usuario: dbUser.id_user,
       correo: dbUser.correo || '',
       rol: dbUser.rol,
       level
