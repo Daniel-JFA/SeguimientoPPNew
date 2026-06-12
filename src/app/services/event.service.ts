@@ -27,7 +27,7 @@ export interface Sesion {
   id_evento: number;
   fecha_revcalidad?: string;
   hora_revcalidad?: string;
-  anexosscore?: string;
+  anexoscore?: string;
   observacioncalidad?: string;
   observacionauditcalidad?: string;
   horafineventdinam?: string;

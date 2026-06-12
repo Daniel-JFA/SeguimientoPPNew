@@ -77,10 +77,10 @@
             </div>
             <div class="doc-meta">
               <h5>Formato FO-GINF-093</h5>
-              <p *ngIf="sesion()?.anexosscore?.includes('FO-GINF-093')">Archivo cargado y validado en sistema.</p>
-              <p *ngIf="!sesion()?.anexosscore?.includes('FO-GINF-093')" class="missing">Falta cargar este archivo.</p>
+              <p *ngIf="sesion()?.anexoscore?.includes('FO-GINF-093')">Archivo cargado y validado en sistema.</p>
+              <p *ngIf="!sesion()?.anexoscore?.includes('FO-GINF-093')" class="missing">Falta cargar este archivo.</p>
             </div>
-            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('FO-GINF-093')">
+            <div class="doc-actions" *ngIf="sesion()?.anexoscore?.includes('FO-GINF-093')">
               <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Descargar</a>
             </div>
           </div>
@@ -91,10 +91,10 @@
             </div>
             <div class="doc-meta">
               <h5>Evidencia Fotográfica</h5>
-              <p *ngIf="sesion()?.anexosscore?.includes('Fotos')">Registro fotográfico recibido.</p>
-              <p *ngIf="!sesion()?.anexosscore?.includes('Fotos')" class="missing">Falta cargar este archivo.</p>
+              <p *ngIf="sesion()?.anexoscore?.includes('Fotos')">Registro fotográfico recibido.</p>
+              <p *ngIf="!sesion()?.anexoscore?.includes('Fotos')" class="missing">Falta cargar este archivo.</p>
             </div>
-            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('Fotos')">
+            <div class="doc-actions" *ngIf="sesion()?.anexoscore?.includes('Fotos')">
               <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Ver Foto</a>
             </div>
           </div>
@@ -105,10 +105,10 @@
             </div>
             <div class="doc-meta">
               <h5>Acta Escaneada</h5>
-              <p *ngIf="sesion()?.anexosscore?.includes('Acta')">Acta de priorización recibida.</p>
-              <p *ngIf="!sesion()?.anexosscore?.includes('Acta')" class="missing">Falta cargar este archivo.</p>
+              <p *ngIf="sesion()?.anexoscore?.includes('Acta')">Acta de priorización recibida.</p>
+              <p *ngIf="!sesion()?.anexoscore?.includes('Acta')" class="missing">Falta cargar este archivo.</p>
             </div>
-            <div class="doc-actions" *ngIf="sesion()?.anexosscore?.includes('Acta')">
+            <div class="doc-actions" *ngIf="sesion()?.anexoscore?.includes('Acta')">
               <a href="#" (click)="$event.preventDefault()" class="btn-download-mock">Descargar</a>
             </div>
           </div>

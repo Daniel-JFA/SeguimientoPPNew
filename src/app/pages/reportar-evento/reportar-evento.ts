@@ -65,7 +65,7 @@ export class ReportarEventoComponent implements OnInit {
           this.tipo_reunion_asistencia = data.evento.tipo_reunion_asistencia || '';
           
           // Parse score/anexos if they exist to mark as uploaded
-          const scoring = data.sesion.anexosscore || '';
+          const scoring = data.sesion.anexoscore || '';
           const statuses = { ...this.uploadStatuses() };
           if (scoring.includes('FO-GINF-093')) statuses['FO-GINF-093'].success = true;
           if (scoring.includes('Fotos')) statuses['Fotos'].success = true;
