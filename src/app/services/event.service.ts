@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { formatLocalYYYYMMDD } from '../utils/date-utils';
 
 export interface Evento {
   id_evento: number;
@@ -51,7 +52,7 @@ export class EventService {
           {
             id_evento: 10694,
             tituloevent: 'Promoción y movilización de proyectos a priorizar con Consejo Distrital de Discapacidad',
-            fechaevent: new Date().toISOString().substring(0, 10),
+            fechaevent: formatLocalYYYYMMDD(new Date()),
             hora_inicioevent: '14:00',
             lugarevent: 'Auditorio CAD',
             id_comuna: 10,
@@ -61,7 +62,7 @@ export class EventService {
           {
             id_evento: 10698,
             tituloevent: 'Promoción y movilización de proyectos a priorizar a familias cuidadoras',
-            fechaevent: new Date(Date.now() + 86400000).toISOString().substring(0, 10),
+            fechaevent: formatLocalYYYYMMDD(new Date(Date.now() + 86400000)),
             hora_inicioevent: '08:00',
             lugarevent: 'Centro integrado San Cristóbal',
             id_comuna: 60,

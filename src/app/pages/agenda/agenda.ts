@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EventService, Evento } from '../../services/event.service';
 import { AuthService } from '../../services/auth.service';
+import { formatLocalYYYYMMDD } from '../../utils/date-utils';
+
 
 @Component({
   selector: 'app-agenda',
@@ -61,7 +63,7 @@ export class AgendaComponent implements OnInit {
   public loadEvents(): void {
     // Tomar el primer día del mes actual para la API
     const firstDay = new Date(this.selectedDate().getFullYear(), this.selectedDate().getMonth(), 1);
-    const dateStr = firstDay.toISOString().substring(0, 10);
+    const dateStr = formatLocalYYYYMMDD(firstDay);
     
     this.eventService.getEvents(dateStr).subscribe(data => {
       this.events.set(data);
@@ -87,7 +89,7 @@ export class AgendaComponent implements OnInit {
   }
 
   public getEventsForDate(date: Date): Evento[] {
-    const dateStr = date.toISOString().substring(0, 10);
+    const dateStr = formatLocalYYYYMMDD(date);
     return this.filteredEvents().filter(e => e.fechaevent === dateStr);
   }
 

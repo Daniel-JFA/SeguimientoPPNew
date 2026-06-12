@@ -152,17 +152,26 @@ export class RegistroExternoComponent implements OnInit {
     setTimeout(() => this.initCanvas(), 100);
   }
 
+  private getCanvasCoords(clientX: number, clientY: number): { x: number, y: number } {
+    const canvasEl = this.canvas.nativeElement;
+    const rect = canvasEl.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left) * (canvasEl.width / rect.width),
+      y: (clientY - rect.top) * (canvasEl.height / rect.height)
+    };
+  }
+
   private startDrawing(e: MouseEvent): void {
     this.isDrawing = true;
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
+    const coords = this.getCanvasCoords(e.clientX, e.clientY);
     this.ctx.beginPath();
-    this.ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    this.ctx.moveTo(coords.x, coords.y);
   }
 
   private draw(e: MouseEvent): void {
     if (!this.isDrawing) return;
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
-    this.ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    const coords = this.getCanvasCoords(e.clientX, e.clientY);
+    this.ctx.lineTo(coords.x, coords.y);
     this.ctx.stroke();
   }
 
@@ -170,18 +179,18 @@ export class RegistroExternoComponent implements OnInit {
     if (e.touches.length !== 1) return;
     e.preventDefault();
     this.isDrawing = true;
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = e.touches[0];
+    const coords = this.getCanvasCoords(touch.clientX, touch.clientY);
     this.ctx.beginPath();
-    this.ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    this.ctx.moveTo(coords.x, coords.y);
   }
 
   private drawTouch(e: TouchEvent): void {
     if (!this.isDrawing || e.touches.length !== 1) return;
     e.preventDefault();
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = e.touches[0];
-    this.ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    const coords = this.getCanvasCoords(touch.clientX, touch.clientY);
+    this.ctx.lineTo(coords.x, coords.y);
     this.ctx.stroke();
   }
 

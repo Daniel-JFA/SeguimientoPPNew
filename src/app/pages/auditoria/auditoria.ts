@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EventService, Evento, Sesion } from '../../services/event.service';
 import { AuthService } from '../../services/auth.service';
+import { formatLocalYYYYMMDD } from '../../utils/date-utils';
 
 @Component({
   selector: 'app-auditoria',
@@ -50,7 +51,7 @@ export class AuditoriaComponent implements OnInit {
 
   private loadPendingSessions(): void {
     // Carga de eventos pendientes para auditar (los que están en color rosa o rojo)
-    this.eventService.getEvents(new Date().toISOString().substring(0, 10)).subscribe(events => {
+    this.eventService.getEvents(formatLocalYYYYMMDD(new Date())).subscribe(events => {
       this.pendingSessions.set(events.filter(e => e.color === '#fdcae1' || e.color === '#D97866'));
     });
   }
